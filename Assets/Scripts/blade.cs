@@ -5,13 +5,16 @@ using UnityEngine;
 public class blade : MonoBehaviour
 {
     public bool isPicked = false;
+    bool usingSyringe;
     Vector3 startPos;
     Vector3 mousePos;
+    GameObject syringe;
 
     // Start is called before the first frame update
     void Start()
     {
         startPos = this.gameObject.transform.localPosition;
+        syringe = GameObject.Find("syringe");
     }
     
     // Update is called once per frame
@@ -33,7 +36,8 @@ public class blade : MonoBehaviour
     // Called every frame while the mouse is over the Collider
     private void OnMouseOver()
     {
-        if (!isPicked && Input.GetMouseButton(0))
+        usingSyringe = syringe.GetComponent<syringe>().isPicked;
+        if (!isPicked && !usingSyringe && Input.GetMouseButton(0))
         {
             isPicked = true;
             this.gameObject.transform.Rotate(0, 0, 35);

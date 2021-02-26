@@ -5,12 +5,14 @@ using UnityEngine;
 public class syringe : MonoBehaviour
 {
     public bool isPicked = false;
-    public bool onSpot = false;
+    bool onSpot = false;
+    bool usingBlade;
     float pushPlunger_speed = 200;
     Vector3 startPos;
     Vector3 mousePos;
     Vector3 plunger_startPos;
     GameObject spot;
+    GameObject blade;
     GameObject plunger;
 
     // Start is called before the first frame update
@@ -18,6 +20,7 @@ public class syringe : MonoBehaviour
     {
         startPos = this.gameObject.transform.localPosition;
         spot = GameObject.Find("spot");
+        blade = GameObject.Find("blade");
         plunger = transform.Find("plunger").gameObject;
         plunger_startPos = plunger.transform.localPosition;
     }
@@ -36,7 +39,7 @@ public class syringe : MonoBehaviour
                 plunger.transform.localPosition = plunger_startPos;
                 isPicked = false;
             }
-            if (onSpot && Input.GetMouseButton(0))
+            if (onSpot && Input.GetMouseButton(0) && plunger.transform.localPosition.y > 450)
             {
                 StartCoroutine(pushPlunger(plunger.transform));
             }
@@ -46,7 +49,8 @@ public class syringe : MonoBehaviour
     // Called every frame while the mouse is over the Collider
     private void OnMouseOver()
     {
-        if (!isPicked && Input.GetMouseButton(0))
+        usingBlade = blade.GetComponent<blade>().isPicked;
+        if (!isPicked && !usingBlade && Input.GetMouseButton(0))
         {
             isPicked = true;
             this.gameObject.transform.Rotate(0, 0, -40);
