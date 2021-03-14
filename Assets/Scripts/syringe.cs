@@ -7,7 +7,7 @@ public class syringe : MonoBehaviour
     public bool isPicked = false;
     bool onSpot = false;
     bool usingBlade;
-    float pushPlunger_speed = 200;
+    float push_speed = 200;
     Vector3 startPos;
     Vector3 mousePos;
     Vector3 plunger_startPos;
@@ -76,7 +76,7 @@ public class syringe : MonoBehaviour
 
     private IEnumerator pushPlunger(Transform pos)
     {
-        pos.localPosition = new Vector3(pos.localPosition.x, pos.localPosition.y - pushPlunger_speed * Time.deltaTime, pos.localPosition.z);
+        pos.localPosition = new Vector3(pos.localPosition.x, pos.localPosition.y - push_speed * Time.deltaTime, pos.localPosition.z);
         yield return null;
     }
 }
