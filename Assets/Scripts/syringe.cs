@@ -5,13 +5,11 @@ using UnityEngine;
 public class syringe : MonoBehaviour
 {
     public bool isPicked = false;
-    bool onSpot = false;
     bool usingBlade;
-    float push_speed = 200;
+    float push_speed = 300;
     Vector3 startPos;
     Vector3 mousePos;
     Vector3 plunger_startPos;
-    GameObject spot;
     GameObject blade;
     GameObject plunger;
 
@@ -19,7 +17,6 @@ public class syringe : MonoBehaviour
     void Start()
     {
         startPos = this.gameObject.transform.localPosition;
-        spot = GameObject.Find("spot");
         blade = GameObject.Find("blade");
         plunger = transform.Find("plunger").gameObject;
         plunger_startPos = plunger.transform.localPosition;
@@ -31,7 +28,10 @@ public class syringe : MonoBehaviour
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (isPicked)
         {
+            // udpate the syringe position based on the mouse position in every frame
             this.gameObject.transform.localPosition = new Vector3(mousePos.x, mousePos.y, 0);
+
+            // drop the syringe upon right click
             if (Input.GetMouseButton(1))
             {
                 this.gameObject.transform.Rotate(0, 0, 40);
@@ -39,14 +39,10 @@ public class syringe : MonoBehaviour
                 plunger.transform.localPosition = plunger_startPos;
                 isPicked = false;
             }
-            if (onSpot && Input.GetMouseButton(0) && plunger.transform.localPosition.y > 450)
-            {
-                StartCoroutine(pushPlunger(plunger.transform));
-            }
         }
     }
 
-    // Called every frame while the mouse is over the Collider
+    // OnMouseOVer is called every frame while the mouse is over the Collider
     private void OnMouseOver()
     {
         usingBlade = blade.GetComponent<blade>().isPicked;
@@ -58,25 +54,12 @@ public class syringe : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    public IEnumerator pushPlunger()
     {
-        if (other.gameObject.name == "spot")
-        {
-            onSpot = true;
+        Transform pos = plunger.transform;
+        if (pos.localPosition.y > 450){
+            pos.localPosition = new Vector3(pos.localPosition.x, pos.localPosition.y - push_speed * Time.deltaTime, pos.localPosition.z);
+            yield return null;
         }
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.name == "spot")
-        {
-            onSpot = false;
-        }
-    }
-
-    private IEnumerator pushPlunger(Transform pos)
-    {
-        pos.localPosition = new Vector3(pos.localPosition.x, pos.localPosition.y - push_speed * Time.deltaTime, pos.localPosition.z);
-        yield return null;
     }
 }

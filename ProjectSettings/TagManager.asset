@@ -38,12 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: background
-    uniqueID: 2616345865
-    locked: 0
-  - name: sprites
-    uniqueID: 3267911301
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Leaf Infiltrate
+    uniqueID: 3267911301
+    locked: 0
+  - name: Tools
+    uniqueID: 605277435
     locked: 0

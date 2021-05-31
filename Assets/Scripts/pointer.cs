@@ -11,7 +11,7 @@ public class pointer : MonoBehaviour
     Vector3 tick_origin;
 
     // key variables for the pointer
-    public float speed = 500;
+    public float speed = 800;
     float tick_x = 0;
     int direction = 1;
 
