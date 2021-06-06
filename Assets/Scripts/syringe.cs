@@ -12,8 +12,10 @@ public class syringe : MonoBehaviour
     Vector3 startPos;
     Vector3 mousePos;
     Vector3 plunger_startPos;
-    GameObject blade;
+    Vector3 buffer_startPos;
     GameObject plunger;
+    GameObject buffer;
+    GameObject blade;
     GameObject tick;
 
     // Start is called before the first frame update
@@ -21,9 +23,11 @@ public class syringe : MonoBehaviour
     {
         isPicked = false;
         startPos = this.gameObject.transform.localPosition;
-        blade = GameObject.Find("blade");
         plunger = transform.Find("plunger").gameObject;
+        buffer = transform.Find("mask-liquid").gameObject;
         plunger_startPos = plunger.transform.localPosition;
+        buffer_startPos = buffer.transform.localPosition;
+        blade = GameObject.Find("blade");
         tick = GameObject.Find("gauge/pointer/tick");
         vol = 300;
     }
@@ -43,6 +47,7 @@ public class syringe : MonoBehaviour
                 this.gameObject.transform.Rotate(0, 0, 40);
                 this.gameObject.transform.localPosition = startPos;
                 plunger.transform.localPosition = plunger_startPos;
+                buffer.transform.localPosition = buffer_startPos;
                 isPicked = false;
                 vol = 300;
             }
@@ -77,6 +82,7 @@ public class syringe : MonoBehaviour
         if (vol > 0){
             vol -= spd_base * spd_multiplier * Time.deltaTime;
             plunger.transform.localPosition = new Vector3(0.7f, vol + 450f, 0);
+            buffer.transform.localPosition = new Vector3(2.8f, vol - 247.5f, 0);
             yield return null;
         }
     }
