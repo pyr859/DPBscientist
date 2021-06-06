@@ -39,10 +39,10 @@ public class leaf_control : MonoBehaviour
             // TBD: IMPLEMENT THE HINT MESSAGES
             if (usingBlade || usingSyringe){
                 if (usingBlade){
-                    print("You are using the blade.");
+                    print("Hint: you should use the blade on the back of the leaf.");
                 }
                 if (usingSyringe){
-                    print("You are using the syringe.");
+                    print("Hint: you should use the syringe on the back of the leaf.");
                 }
             }
             // flipped = false, if the leaf is front side up => flipLeaf() executes a flipforth action series

@@ -11,8 +11,8 @@ public class pointer : MonoBehaviour
     Vector3 tick_origin;
 
     // key variables for the pointer
-    public float speed = 800;
-    float tick_x = 0;
+    float speed = 1800;
+    float tick_x;
     int direction = 1;
 
     // crosstalk with other GameObjects
@@ -47,34 +47,14 @@ public class pointer : MonoBehaviour
 
         // if the blade is picked during a frame, move the gauge pointer along the x-axis with a defined speed
         if (bladeIsPicked) {    
-            if (tick_x <= 0) {
-                direction = 1;
-            }
-            else if (tick_x >= 2000) {
-                direction = -1;
-            }
-            StartCoroutine(movePointer(triangle.transform, tick.transform));
+            StartCoroutine(movePointer("blade"));
         }
-        // if the syringe is picked during a frame
-        else if (syringeIsPicked) {
-            // when the left mouse button is pressed
-            if (Input.GetMouseButton(0)) {
-                // if the tick is inside the appropriate range (i.e. x <= 2000), move the pointer to the right at a constant speed
-                if (tick_x <= 2000) {
-                    direction = 1;
-                    StartCoroutine(movePointer(triangle.transform, tick.transform));
-                }
-                // if the tick is beyond the appropriate range, do nothing
-            }
-            // when the left mouse button is not pressed
-            else {
-                // as long as the tick is inside the appropriate range (i.e. x >= 0), move the pointer to the left at a constant speed
-                if (tick_x >= 0) {
-                    direction = -1;
-                    StartCoroutine(movePointer(triangle.transform, tick.transform));
-                }
-            }
+
+        // if the syringe is picked during a frame but is inactive, move the gauge pointer to the left toward the origin at a constant speed
+        else if (syringeIsPicked && !Input.GetMouseButton(0)){
+            StartCoroutine(movePointer("syringe_idle"));
         }
+
         // if no tool is picked during a frame, set the gauge pointer to its origin
         else if (!bladeIsPicked && !syringeIsPicked) {
             triangle.transform.localPosition = triangle_origin;
@@ -82,10 +62,46 @@ public class pointer : MonoBehaviour
         }
     }
 
-    private IEnumerator movePointer(Transform triangle, Transform tick)
+    public IEnumerator movePointer(string mode)
     {
-        triangle.localPosition = new Vector3(triangle.localPosition.x + speed * Time.deltaTime * direction, triangle.localPosition.y, triangle.localPosition.z);
-        tick.localPosition = new Vector3(tick.localPosition.x + speed * Time.deltaTime * direction, tick.localPosition.y, tick.localPosition.z);
+        if (mode == "blade"){
+            if (tick_x <= 0) {
+                direction = 1;
+            }
+            else if (tick_x >= 2000) {
+                direction = -1;
+            }
+        }
+        // if the tick is inside the appropriate range (x <= 2000), move the pointer to the right at a constant speed
+        // if the tick is beyond the appropriate range, remain in place
+        else if (mode == "syringe_push"){
+            if (tick_x <= 2000){
+                direction = 1;
+            }
+            else if (tick_x > 2000){
+                direction = 0;
+            }
+        }
+        // if the tick is inside the appropriate range (x >= 0), move the pointer to the left at a constant speed
+        // if the tick is beyond the appropriate range, remain in place
+        else if (mode == "syringe_idle"){
+            if (tick_x > 0) {
+                direction = -1;
+            }
+            else if (tick_x <= 0) {
+                direction = 0;
+            }
+        }
+        else {
+            Debug.Log("Invalid command");
+        }
+
+        Transform tri = triangle.transform;
+        Transform tic = tick.transform;
+        // move the triangle
+        tri.localPosition = new Vector3(tri.localPosition.x + speed * Time.deltaTime * direction, tri.localPosition.y, tri.localPosition.z);
+        // move the tick
+        tic.localPosition = new Vector3(tic.localPosition.x + speed * Time.deltaTime * direction, tic.localPosition.y, tic.localPosition.z);
         yield return null;
     }
 }
